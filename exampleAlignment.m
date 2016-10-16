@@ -92,15 +92,31 @@ trialEnds = [tr.trialEndedTime];
 
 sw = block.stimWindowUpdateTimes;
 
-%% get alignment between block and timeline
+%% get alignment between block and timeline: now using reward times
 
-pd = Timeline.rawDAQData(:,strcmp({Timeline.hw.inputs.name}, 'photoDiode'));
-pdFlips = schmittTimes(tt,pd, [3 5]);
+rew = Timeline.rawDAQData(:, strcmp({Timeline.hw.inputs.name}, 'rewardEcho'));
+[~, rewardOnsets] = schmittTimes(tt,rew, [2 3]);
 
-figure; 
-plot(sw, ones(size(sw)), '.');
-hold on; 
-plot(pdFlips, ones(size(pdFlips))+1, '.');
-ylim([-3 6])
+blockRewTimes = block.rewardDeliveryTimes(block.rewardDeliveredSizes(:,1)>0);
+blockToTL = makeCorrection(rewardOnsets, blockRewTimes, true);
 
-blockToTL = makeCorrection(pdFlips(2:end-1), sw, true);
+% old version, using photodiode times, susceptible to missed frames
+% pd = Timeline.rawDAQData(:,strcmp({Timeline.hw.inputs.name}, 'photoDiode'));
+% pdFlips = schmittTimes(tt,pd, [3 5]);
+% 
+% blockToTL = makeCorrection(pdFlips(2:end-1), sw, true);
+
+% if this does not work, you may need to pick different photodiode events.
+% Try looking at this plot to figure out whether to drop one at the
+% beginning or end or what. 
+% figure; 
+% plot(sw, ones(size(sw)), '.');
+% hold on; 
+% plot(pdFlips, ones(size(pdFlips))+1, '.');
+% ylim([-3 6])
+
+%% save the correction
+
+fp = fileparts(dat.expFilePath(mouseName, thisDate, expNum, 'block', 'master'));
+save(fullfile(fp, 'blockToTL.mat'), 'blockToTL');
+
