@@ -1,9 +1,14 @@
 
-function avgMovieIntensity(direc, fname, outputSuffix, makePlots, ROI, varargin)
-%function avgMovieIntensity(direc, fname, outputSuffix, makePlots, ROI[, datPath])
+function ROI = avgMovieIntensity(direc, fname, outputSuffix, makePlots, ROI, varargin)
+%function avgMovieIntensity(direc, fname, outputSuffix, makePlots, ROI[, datPath, nFramesToLoad])
 
+nFramesToLoad = [];
 if ~isempty(varargin)
     datPath = varargin{1};
+    
+    if length(varargin)>1
+        nFramesToLoad = varargin{2};
+    end
 else
     datPath = [];
 end
@@ -47,24 +52,41 @@ tic
 % end
 
 % ** TEST of chunk-reading method
-chunkSize = 5000;
-numChunks = floor(nF/chunkSize);
 
-for ch = 1:numChunks
-    img = read(vr, [(ch-1)*chunkSize+1 ch*chunkSize]);
-    avgIntensity((ch-1)*chunkSize+1:ch*chunkSize) = squeeze(mean(mean(img(ROI(2):ROI(4), ROI(1):ROI(3),:,:), 1),2));
-    if ~isempty(datPath)
-        fwrite(fid, reshape(img, size(img,1)*size(img,2), chunkSize), 'uint8');
+if isempty(nFramesToLoad) %load all
+    chunkSize = 5000;
+    numChunks = floor(nF/chunkSize);
+
+    for ch = 1:numChunks
+        img = read(vr, [(ch-1)*chunkSize+1 ch*chunkSize]);
+        avgIntensity((ch-1)*chunkSize+1:ch*chunkSize) = squeeze(mean(mean(img(ROI(2):ROI(4), ROI(1):ROI(3),:,:), 1),2));
+        if ~isempty(datPath)
+            fwrite(fid, reshape(img, size(img,1)*size(img,2), chunkSize), 'uint8');
+        end
+        fprintf(1, '%d / %d\n', ch*chunkSize, nF);
+        toc
     end
-    fprintf(1, '%d / %d\n', ch*chunkSize, nF);
-    toc
-end
-% last bit
-img = read(vr, [ch*chunkSize+1 nF]);
-avgIntensity(ch*chunkSize+1:nF) = squeeze(mean(mean(img, 1),2));
-if ~isempty(datPath)
-    fwrite(fid, reshape(img, size(img,1)*size(img,2), []), 'uint8');
-    fclose(fid);
+    % last bit
+    img = read(vr, [ch*chunkSize+1 nF]);
+    avgIntensity(ch*chunkSize+1:nF) = squeeze(mean(mean(img, 1),2));
+    if ~isempty(datPath)
+        fwrite(fid, reshape(img, size(img,1)*size(img,2), []), 'uint8');
+        fclose(fid);
+    end
+    
+    isLoaded = true(size(avgIntensity));
+else
+    
+    img = read(vr, [1 nFramesToLoad]);
+    avgIntensity(1:nFramesToLoad) = squeeze(mean(mean(img(ROI(2):ROI(4), ROI(1):ROI(3),:,:), 1),2));
+    avgIntensity(nFramesToLoad+1:nF-nFramesToLoad-1) = avgIntensity(nFramesToLoad);
+    
+    img = read(vr, [nF-nFramesToLoad nF]);
+    avgIntensity(nF-nFramesToLoad:nF) = squeeze(mean(mean(img(ROI(2):ROI(4), ROI(1):ROI(3),:,:), 1),2));
+    
+    isLoaded = false(size(avgIntensity));
+    isLoaded(1:nFramesToLoad) = true;
+    isLoaded(nF-nFramesToLoad:nF) = true;
 end
 % ** TEST of readFrame method. Result is that it is slower
 % f = 1;
@@ -87,7 +109,7 @@ if makePlots
     drawnow;  %    pause(0.01);
 end
 if ~isempty(outputSuffix)
-    save(fullfile(direc, [fname '_avgIntensity_' outputSuffix '.mat']), 'avgIntensity');
+    save(fullfile(direc, [fname '_avgIntensity_' outputSuffix '.mat']), 'avgIntensity', 'isLoaded');
 else
-    save(fullfile(direc, [fname '_avgIntensity.mat']), 'avgIntensity');
+    save(fullfile(direc, [fname '_avgIntensity.mat']), 'avgIntensity', 'isLoaded');
 end
