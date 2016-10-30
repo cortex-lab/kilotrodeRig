@@ -30,7 +30,7 @@ elseif strcmp(ROI, 'ask')
     imagesc(img1); colormap gray
     title('choose roi');
     q = imrect;
-    ROI = q.getPosition;
+    ROI = round(q.getPosition);
     close(f);
 end
 
@@ -59,7 +59,7 @@ if isempty(nFramesToLoad) %load all
 
     for ch = 1:numChunks
         img = read(vr, [(ch-1)*chunkSize+1 ch*chunkSize]);
-        avgIntensity((ch-1)*chunkSize+1:ch*chunkSize) = squeeze(mean(mean(img(ROI(2):ROI(4), ROI(1):ROI(3),:,:), 1),2));
+        avgIntensity((ch-1)*chunkSize+1:ch*chunkSize) = squeeze(mean(mean(img(ROI(2):(ROI(2)+ROI(4)-1), ROI(1):(ROI(1)+ROI(3)-1),:,:), 1),2));
         if ~isempty(datPath)
             fwrite(fid, reshape(img, size(img,1)*size(img,2), chunkSize), 'uint8');
         end
@@ -78,11 +78,11 @@ if isempty(nFramesToLoad) %load all
 else
     
     img = read(vr, [1 nFramesToLoad]);
-    avgIntensity(1:nFramesToLoad) = squeeze(mean(mean(img(ROI(2):ROI(4), ROI(1):ROI(3),:,:), 1),2));
+    avgIntensity(1:nFramesToLoad) = squeeze(mean(mean(img(ROI(2):(ROI(2)+ROI(4)-1), ROI(1):(ROI(1)+ROI(3)-1),:,:), 1),2));
     avgIntensity(nFramesToLoad+1:nF-nFramesToLoad-1) = avgIntensity(nFramesToLoad);
     
     img = read(vr, [nF-nFramesToLoad nF]);
-    avgIntensity(nF-nFramesToLoad:nF) = squeeze(mean(mean(img(ROI(2):ROI(4), ROI(1):ROI(3),:,:), 1),2));
+    avgIntensity(nF-nFramesToLoad:nF) = squeeze(mean(mean(img(ROI(2):(ROI(2)+ROI(4)-1), ROI(1):(ROI(1)+ROI(3)-1),:,:), 1),2));
     
     isLoaded = false(size(avgIntensity));
     isLoaded(1:nFramesToLoad) = true;
