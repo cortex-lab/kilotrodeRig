@@ -1,5 +1,7 @@
 
 function [corrFun, b] = makeCorrection(correctTo, correctFrom, makePlots)
+% function [corrFun, b] = makeCorrection(correctTo, correctFrom, makePlots)
+%
 % make a function that linearly predicts correctTo from correctFrom, both vectors of same
 % length
 % - now can attempt to fit for cases with vectors of different lengths,
