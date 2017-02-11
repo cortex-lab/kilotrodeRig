@@ -48,9 +48,11 @@ maxPlotDriftmap = 500000;
 % thisDate = '2017-01-09';
 % tag = 'PM'; % PM, LM
 
-% mouseName = 'Radnitz'; 
+mouseName = 'Radnitz'; 
 % thisDate = '2017-01-08';
 % tag = 'M2'; %V1, M2
+thisDate = '2017-01-13';
+tag = 'V1'; %V1, M2
 
 % mouseName = 'Houssay'; 
 % thisDate = '2017-01-14';
@@ -60,9 +62,9 @@ maxPlotDriftmap = 500000;
 % thisDate = '2017-01-15';
 % tag = [];
 
-mouseName = 'Fleming'; 
-thisDate = '2017-01-15';
-tag = [];
+% mouseName = 'Fleming'; 
+% thisDate = '2017-01-15';
+% tag = [];
 
 expPath = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
 expRoot = fileparts(expPath);

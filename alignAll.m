@@ -12,7 +12,7 @@
 
 %% 
 mouseName = 'Radnitz';
-thisDate = '2017-01-09';
+thisDate = '2017-01-13';
 
 rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
 root = fileparts(rootE);
@@ -83,6 +83,7 @@ for e = 1:length(expNums)
         load(dBlock)
         blocks{e} = block;
         hasBlock(e) = true;
+        fprintf(1, 'expNum %d has block\n', e);
     end
 
     dPars = dat.expFilePath(mouseName, thisDate, expNums(e), 'parameters', 'master');
@@ -91,6 +92,7 @@ for e = 1:length(expNums)
         pars{e} = parameters;
         if isfield(parameters, 'Protocol')
             isMpep(e) = true;
+            fprintf(1, 'expNum %d is mpep\n', e);
         end        
     end
         
@@ -106,6 +108,7 @@ for e = 1:length(expNums)
         pd = Timeline.rawDAQData(:, strcmp({Timeline.hw.inputs.name}, 'photoDiode'));
         pdT = schmittTimes(tt, pd, [2 3]); % all flips, both up and down
         tlFlips{e} = pdT;
+        fprintf(1, 'expNum %d has timeline\n', e);
     end    
 end
 
@@ -153,7 +156,7 @@ end
 % want to connect each block or mpep with part of a timeline. So go through
 % each of these in order, looking through the timelines in sequence (of
 % what hasn't already been matched) looking for a match. 
-
+lastTimes = zeros(1,length(expNums));
 for e = 1:length(expNums)
     if hasBlock(e)
         for eTL = 1:length(expNums)
@@ -176,13 +179,90 @@ for e = 1:length(expNums)
                         sprintf('block_%d_sw_in_timeline_%d.npy', ...
                         e, eTL)));
                     fprintf('  success\n');
+                    lastTimes(eTL) = actualTimes(end);
                 else
                     fprintf('  could not correct block %d to timeline %d\n', e, eTL);
                 end
             end
         end
     elseif isMpep(e)
-        % here instead... something different.
+        for eTL = 1:length(expNums)
+            if hasTimeline(eTL)
+                fprintf('trying to correct mpep %d to timeline %d\n', e, eTL);
+                p = pars{e}.Protocol;
+                nStims = numel(p.seqnums);
+                
+                % An mpep stimulus has constant flips, with a gap in between
+                % stimuli. We'd like to know how many stimuli were shown, how long
+                % each lasted, and how much gap there was in between. But we can
+                % only really get the number of stimuli. 
+%                 minBetween = 0.2; % sec, assume at least this much time in between stimuli
+%                 maxBetweenFlips = 2/60; 
+%                 if any(strcmp(p.parnames, 'dur'))
+%                     estimatedDur = min(p.pars(strcmp(p.parnames, 'dur'),:))/10; % sec
+%                     minDur = estimatedDur*0.75;
+%                 else
+%                     estimatedDur = [];
+%                     minDur = 0.2;
+%                 end
+%                 nStims = numel(p.seqnums);
+%                 pdT = tlFlips{eTL};
+%                 pdT = pdT(pdT>lastTimes(eTL)); 
+%                 
+%                 dpdt = diff([0; pdT]);
+%                 
+%                 possibleStarts = find(dpdt>minBetween);
+%                 possibleEnds = [possibleStarts(2:end)-1; length(pdT)]; 
+%                 durs = pdT(possibleEnds)-pdT(possibleStarts);
+%                 
+%                 % gaps will be the gap *after* a stimulus
+%                 gaps = pdT(possibleStarts(2:end))-pdT(possibleEnds(1:end-1));
+                
+                % dang, need a better system for mpep. The problem in
+                % Radnitz 2017-01-13 is that the photodiode was picking up
+                % some stuff around the sync square, which led to it being
+                % too bright in the down state to flip down for just one
+                % stimulus. Unfortunately that screws the whole thing. 
+                Timeline = tl{eTL}; Fs = Timeline.hw.daqSampleRate;
+                tt = Timeline.rawDAQTimestamps;
+                tpd = Timeline.rawDAQData(:,strcmp({Timeline.hw.inputs.name}, 'photoDiode'));
+                
+                sig = conv(diff([0; tpd]).^2, ones(1,16/1000*Fs), 'same');
+                figure; 
+                plot(tt(tt>lastTimes(eTL)), sig(tt>lastTimes(eTL)));
+                title(sprintf('expect %d stims', nStims));
+                
+                mpepStart = input('start of mpep? ');
+                mpepEnd = input('end of mpep? ');
+                thresh = input('lower/upper thresh? ');
+                
+                [flipTimes, flipsUp, flipsDown] = schmittTimes(tt, sig, thresh);
+                
+                flipsUp = flipsUp(flipsUp>mpepStart & flipsUp<mpepEnd);
+                flipsDown = flipsDown(flipsDown>mpepStart & flipsDown<mpepEnd);
+                
+                if nStims==length(flipsUp)
+                    fprintf(1, 'success\n');
+                    stimOnsets = flipsUp;
+                    stimOffsets = flipsDown;
+                    
+                    writeNPY(stimOnsets, fullfile(alignDir, ...
+                        sprintf('mpep_%d_onsets_in_timeline_%d.npy', ...
+                        e, eTL)));
+                    writeNPY(stimOffsets, fullfile(alignDir, ...
+                        sprintf('mpep_%d_offsets_in_timeline_%d.npy', ...
+                        e, eTL)));
+                    
+                    lastTimes(eTL) = stimOffsets(end);
+                else
+                    fprintf(1, 'unsuccessful - found %d, expected %d\n', length(flipsUp), nStims);
+                end
+                
+            end
+        end
+                
+        
+        
         
     end
 end
