@@ -11,8 +11,9 @@
 % to Timeline, so that part is generic to the case when there's no ephys
 
 %% 
+clear all
 mouseName = 'Radnitz';
-thisDate = '2017-01-13';
+thisDate = '2016-12-20';
 
 rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
 root = fileparts(rootE);
@@ -21,20 +22,7 @@ alignDir = fullfile(root, 'alignments');
 if ~exist(alignDir, 'dir'); mkdir(alignDir); end;
 
 %% determine whether there is ephys and if so what tags
-d = dir(fullfile(root, 'ephys*'));
-
-clear tags
-if numel(d)==1 && strcmp(d.name, 'ephys')
-    tags = {[]};
-    hasEphys = true;
-elseif numel(d)>1
-    for q = 1:numel(d)
-        tags{q} = d(q).name(7:end);
-    end
-    hasEphys = true;
-else
-    hasEphys = false;
-end
+[tags, hasEphys] = getEphysTags(mouseName, thisDate);
 
 
 %% for any ephys, load the sync data
@@ -80,10 +68,11 @@ for e = 1:length(expNums)
     % if block, load block and get stimWindowUpdateTimes
     dBlock = dat.expFilePath(mouseName, thisDate, expNums(e), 'block', 'master');
     if exist(dBlock)
+        fprintf(1, 'expNum %d has block\n', e);
         load(dBlock)
         blocks{e} = block;
         hasBlock(e) = true;
-        fprintf(1, 'expNum %d has block\n', e);
+
     end
 
     dPars = dat.expFilePath(mouseName, thisDate, expNums(e), 'parameters', 'master');
@@ -101,14 +90,16 @@ for e = 1:length(expNums)
     % events.
     dTL = dat.expFilePath(mouseName, thisDate, expNums(e), 'Timeline', 'master');
     if exist(dTL)
+        fprintf(1, 'expNum %d has timeline\n', e);        
         load(dTL)
         tl{e} = Timeline;      
         hasTimeline(e) = true;
         tt = Timeline.rawDAQTimestamps;
         pd = Timeline.rawDAQData(:, strcmp({Timeline.hw.inputs.name}, 'photoDiode'));
-        pdT = schmittTimes(tt, pd, [2 3]); % all flips, both up and down
+        pdT = schmittTimes(tt, pd, [3 4]); % all flips, both up and down
+%         pdT = schmittTimes(tt, pd, [1.5 2]); % tried using TTL levels (0.8,2)
         tlFlips{e} = pdT;
-        fprintf(1, 'expNum %d has timeline\n', e);
+
     end    
 end
 
@@ -128,12 +119,13 @@ if hasEphys
             %Timeline = tl{e};
             pdT = tlFlips{e};
 
+            success=false;
             if length(pdT)==length(ef)
                 % easy case: the two are exactly coextensive
                 [~,b] = makeCorrection(ef, pdT, false);
                 success = true;
             end
-            if length(pdT)<length(ef)
+            if length(pdT)<length(ef) && length(pdT)>0
                 [~,b,success] = findCorrection(ef, pdT, false);
             end
             if success
@@ -168,7 +160,7 @@ for e = 1:length(expNums)
                 sw = block.stimWindowUpdateTimes;
                 
                 success = false;
-                if length(sw)<length(pdT)
+                if length(sw)<=length(pdT) && length(sw)>1
                     [~,b,success,actualTimes] = findCorrection(pdT, sw, false);
                 end
                 if success                    
@@ -240,6 +232,10 @@ for e = 1:length(expNums)
                 
                 flipsUp = flipsUp(flipsUp>mpepStart & flipsUp<mpepEnd);
                 flipsDown = flipsDown(flipsDown>mpepStart & flipsDown<mpepEnd);
+                
+                skippedFrames = (flipsUp(2:end)-flipsDown(1:end-1))<0.05; % assume stimuli are longer than 100ms
+                flipsUp = flipsUp(~[false; skippedFrames]);
+                flipsDown = flipsDown(~[skippedFrames; false]);
                 
                 if nStims==length(flipsUp)
                     fprintf(1, 'success\n');
