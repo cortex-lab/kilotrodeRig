@@ -12,8 +12,8 @@
 
 %% 
 clear all
-mouseName = 'Radnitz';
-thisDate = '2016-12-20';
+mouseName = 'SS074';
+thisDate = '2017-01-04';
 
 rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
 root = fileparts(rootE);
@@ -52,56 +52,23 @@ end
 
 %% determine what exp nums exist
 
-rootExp = dat.expFilePath(mouseName, thisDate, 1, 'Timeline', 'master');
-expInf = fileparts(fileparts(rootExp));
+[expNums, blocks, hasBlock, pars, isMpep, tl, hasTimeline] = ...
+    dat.whichExpNums(mouseName, thisDate);
 
-d = dir(fullfile(expInf, '*'));
-expNums = cell2mat(cellfun(@str2num, {d(3:end).name}, 'uni', false));
+%% detect pd events from timelines
 
-%% for each expNum, determine what type it is 
-
-hasBlock = false(size(expNums));
-isMpep = false(size(expNums));
-hasTimeline = false(size(expNums));
-
+tlFlips = {};
 for e = 1:length(expNums)
-    % if block, load block and get stimWindowUpdateTimes
-    dBlock = dat.expFilePath(mouseName, thisDate, expNums(e), 'block', 'master');
-    if exist(dBlock)
-        fprintf(1, 'expNum %d has block\n', e);
-        load(dBlock)
-        blocks{e} = block;
-        hasBlock(e) = true;
-
-    end
-
-    dPars = dat.expFilePath(mouseName, thisDate, expNums(e), 'parameters', 'master');
-    if exist(dPars)
-        load(dPars)
-        pars{e} = parameters;
-        if isfield(parameters, 'Protocol')
-            isMpep(e) = true;
-            fprintf(1, 'expNum %d is mpep\n', e);
-        end        
-    end
-        
-
-    % if there is a timeline, load it and get photodiode events, mpep UDP
-    % events.
-    dTL = dat.expFilePath(mouseName, thisDate, expNums(e), 'Timeline', 'master');
-    if exist(dTL)
-        fprintf(1, 'expNum %d has timeline\n', e);        
-        load(dTL)
-        tl{e} = Timeline;      
-        hasTimeline(e) = true;
+    if hasTimeline(e)
+        Timeline = tl{e};
         tt = Timeline.rawDAQTimestamps;
         pd = Timeline.rawDAQData(:, strcmp({Timeline.hw.inputs.name}, 'photoDiode'));
         pdT = schmittTimes(tt, pd, [3 4]); % all flips, both up and down
-%         pdT = schmittTimes(tt, pd, [1.5 2]); % tried using TTL levels (0.8,2)
+        %         pdT = schmittTimes(tt, pd, [1.5 2]); % tried using TTL levels (0.8,2)
         tlFlips{e} = pdT;
-
-    end    
+    end
 end
+
 
 %% match up ephys and timeline events
 

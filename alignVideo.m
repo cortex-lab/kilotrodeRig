@@ -7,6 +7,7 @@ timelineExpNums = expNum;
 tlSyncName = 'camSync';
 silentMode = true;
 recompute = false;
+nFramesToLoad = 3000;
 
 switch movieName
     case 'eye'
@@ -37,6 +38,9 @@ if ~isempty(varargin)
     if isfield(params, 'recompute')
         recompute = params.recompute;
     end
+    if isfield(params, 'nFramesToLoad')
+        nFramesToLoad = params.nFramesToLoad;
+    end
 end
 
 assert(~strcmp(strobeName, 'unknown'), 'please provide params.strobeName');
@@ -59,9 +63,9 @@ end
 if ~exist(intensFile, 'file')            
     fprintf(1, 'computing average intensity of first/last frames...\n');
     if silentMode
-        ROI = avgMovieIntensity(movieDir, movieName, [], true, [], [], 3000);
+        ROI = avgMovieIntensity(movieDir, movieName, [], true, [], [], nFramesToLoad);
     else
-        ROI = avgMovieIntensity(movieDir, movieName, [], true, 'ask', [], 3000);
+        ROI = avgMovieIntensity(movieDir, movieName, [], true, 'ask', [], nFramesToLoad);
     end
 end
 

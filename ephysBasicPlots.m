@@ -14,10 +14,11 @@
 % - add unit scatter
 % - add wheel velocity subplot to driftmaps
 
+function ephysBasicPlots(mouseName, thisDate, tag)
 
 %% 
 
-clear all; close all;
+% clear all; close all;
 
 %% parameters
 maxPlotDriftmap = 500000;
@@ -34,6 +35,12 @@ maxPlotDriftmap = 500000;
 % thisDate = '2016-12-07';
 % tag = 'V1'; % V1, SC
 
+% mouseName = 'SS072'; 
+% % thisDate = '2016-12-02';
+% % tag = 'V1'; % V1, SC
+% thisDate = '2016-12-04';
+% tag = 'V1'; % V1, SC
+
 % mouseName = 'SS074'; 
 % thisDate = '2017-01-04';
 % tag = 'SC'; % V1, SC
@@ -48,11 +55,19 @@ maxPlotDriftmap = 500000;
 % thisDate = '2017-01-09';
 % tag = 'PM'; % PM, LM
 
-mouseName = 'Radnitz'; 
+% mouseName = 'Radnitz'; 
 % thisDate = '2017-01-08';
 % tag = 'M2'; %V1, M2
-thisDate = '2017-01-13';
-tag = 'V1'; %V1, M2
+% thisDate = '2017-01-09';
+% tag = 'V1'; %V1, M2
+% thisDate = '2017-01-10';
+% tag = 'AM'; %AM, M2
+% thisDate = '2017-01-11';
+% tag = 'RSP'; %PM, RSP
+% thisDate = '2017-01-12';
+% tag = 'S1'; %M1, S1
+% thisDate = '2017-01-13';
+% tag = 'M1'; %V1, M1
 
 % mouseName = 'Houssay'; 
 % thisDate = '2017-01-14';
@@ -247,3 +262,58 @@ set(flfp, 'Position', [-1896         -18        1564         930]);
 saveFig(flfp, fullfile(figDir, 'lfpPower'), 'jpg');
 
 toc
+
+
+
+return;
+
+%%
+
+clear r;
+n = 0; 
+n = n+1; r(n).mouseName = 'Cori'; r(n).thisDate = '2016-12-14'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
+n = n+1; r(n).mouseName = 'Cori'; r(n).thisDate = '2016-12-15'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Cori'; r(n).thisDate = '2016-12-16'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
+n = n+1; r(n).mouseName = 'Cori'; r(n).thisDate = '2016-12-17'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
+n = n+1; r(n).mouseName = 'Cori'; r(n).thisDate = '2016-12-18'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
+
+n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-08'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-09'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-10'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-11'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-12'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
+n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-13'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = []; 
+
+n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-07'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-08'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-09'; r(n).tlExpNum = 3; r(n).cwExpNum = 4; r(n).passiveExpNum = 6; 
+n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-10'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-11'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
+n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-12'; r(n).tlExpNum = 3; r(n).cwExpNum = 4; r(n).passiveExpNum = 6; 
+
+%%
+for n = 14%1:length(r)
+    fn = fieldnames(r); for f = 1:length(fn); eval([fn{f} ' = r(n).(fn{f});']); end;
+    try
+        fprintf(1, '%s - %s\n', mouseName, thisDate);
+          
+        ksRoot = fullfile('\\basket.cortexlab.net\data\nick', mouseName, thisDate);
+        rootFigDir = fullfile(ksRoot, 'figs'); mkdir(rootFigDir);
+        evRasterFigDir = fullfile(rootFigDir, 'eventRasters'); mkdir(evRasterFigDir);
+        
+        rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
+        root = fileparts(rootE);
+        
+        [tags, hasEphys] = getEphysTags(mouseName, thisDate);
+        for t = 1:length(tags)
+            fprintf(1, '  %s\n', tags{t});
+        
+            ephysBasicPlots(mouseName, thisDate, tags{t});
+        end
+
+        close all;
+        
+    catch me
+        disp(me)
+    end
+end
