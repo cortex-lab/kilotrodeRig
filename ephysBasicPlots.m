@@ -292,14 +292,16 @@ n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-11'; r(n).tlExpNum 
 n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-12'; r(n).tlExpNum = 3; r(n).cwExpNum = 4; r(n).passiveExpNum = 6; 
 
 %%
-for n = 14%1:length(r)
+clear r
+r.mouseName = 'Hess'; r.thisDate = '2017-04-03';
+%%
+for n = 1%1:length(r)
     fn = fieldnames(r); for f = 1:length(fn); eval([fn{f} ' = r(n).(fn{f});']); end;
     try
         fprintf(1, '%s - %s\n', mouseName, thisDate);
           
         ksRoot = fullfile('\\basket.cortexlab.net\data\nick', mouseName, thisDate);
         rootFigDir = fullfile(ksRoot, 'figs'); mkdir(rootFigDir);
-        evRasterFigDir = fullfile(rootFigDir, 'eventRasters'); mkdir(evRasterFigDir);
         
         rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
         root = fileparts(rootE);

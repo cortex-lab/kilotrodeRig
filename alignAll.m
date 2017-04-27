@@ -12,8 +12,9 @@
 
 %% 
 clear all
-mouseName = 'SS074';
-thisDate = '2017-01-04';
+mouseName = 'Hess';
+thisDate = '2017-04-03';
+useFlipper = true;
 
 rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
 root = fileparts(rootE);
@@ -22,7 +23,7 @@ alignDir = fullfile(root, 'alignments');
 if ~exist(alignDir, 'dir'); mkdir(alignDir); end;
 
 %% determine whether there is ephys and if so what tags
-[tags, hasEphys] = getEphysTags(mouseName, thisDate);
+[tags, hasEphys] = getEphysTags(mouseName, thisDate)
 
 
 %% for any ephys, load the sync data
@@ -30,11 +31,15 @@ if ~exist(alignDir, 'dir'); mkdir(alignDir); end;
 if hasEphys
     for t = 1:length(tags)
         if isempty(tags{t})
-            [~, detectedFlips] = loadSync(mouseName, thisDate);
+            [~, pdFlips, allET] = loadSync(mouseName, thisDate);
         else
-            [~, detectedFlips] = loadSync(mouseName, thisDate, tags{t});
+            [~, pdFlips, allET] = loadSync(mouseName, thisDate, tags{t});
         end
-        ephysFlips{t} = detectedFlips;
+        if useFlipper
+            ephysFlips{t} = allET{5}{1};
+        else
+            ephysFlips{t} = pdFlips;
+        end
     end
 end
     
@@ -55,17 +60,22 @@ end
 [expNums, blocks, hasBlock, pars, isMpep, tl, hasTimeline] = ...
     dat.whichExpNums(mouseName, thisDate);
 
-%% detect pd events from timelines
+%% detect sync events from timelines
 
 tlFlips = {};
 for e = 1:length(expNums)
     if hasTimeline(e)
         Timeline = tl{e};
         tt = Timeline.rawDAQTimestamps;
-        pd = Timeline.rawDAQData(:, strcmp({Timeline.hw.inputs.name}, 'photoDiode'));
-        pdT = schmittTimes(tt, pd, [3 4]); % all flips, both up and down
-        %         pdT = schmittTimes(tt, pd, [1.5 2]); % tried using TTL levels (0.8,2)
-        tlFlips{e} = pdT;
+        if useFlipper
+            evTrace = Timeline.rawDAQData(:, strcmp({Timeline.hw.inputs.name}, 'flipper'));
+            evT = schmittTimes(tt, evTrace, [3 4]); % all flips, both up and down
+        else
+            evTrace = Timeline.rawDAQData(:, strcmp({Timeline.hw.inputs.name}, 'photoDiode'));
+            evT = schmittTimes(tt, evTrace, [3 4]); % all flips, both up and down
+            %         pdT = schmittTimes(tt, pd, [1.5 2]); % tried using TTL levels (0.8,2)
+        end
+        tlFlips{e} = evT;
     end
 end
 
@@ -80,20 +90,29 @@ end
 % to that 
 if hasEphys
     ef = ephysFlips{1};
+    
+    if useFlipper && ef(1)<0.001
+        % this happens when the flipper was in the high state to begin with
+        % - a turning on event is registered at the first sample. But here
+        % we need to drop it. 
+        ef = ef(2:end);
+    end
+        
+    
     for e = 1:length(expNums)
         if hasTimeline(e)
             fprintf('trying to correct timeline %d to ephys\n', e);
             %Timeline = tl{e};
-            pdT = tlFlips{e};
-
+            tlT = tlFlips{e};            
+            
             success=false;
-            if length(pdT)==length(ef)
+            if length(tlT)==length(ef)
                 % easy case: the two are exactly coextensive
-                [~,b] = makeCorrection(ef, pdT, false);
+                [~,b] = makeCorrection(ef, tlT, false);
                 success = true;
             end
-            if length(pdT)<length(ef) && length(pdT)>0
-                [~,b,success] = findCorrection(ef, pdT, false);
+            if length(tlT)<length(ef) && length(tlT)>0
+                [~,b,success] = findCorrection(ef, tlT, false);
             end
             if success
                 writeNPY(b, fullfile(alignDir, ...
@@ -121,10 +140,19 @@ for e = 1:length(expNums)
         for eTL = 1:length(expNums)
             if hasTimeline(eTL)
                 fprintf('trying to correct block %d to timeline %d\n', e, eTL);
-                %Timeline = tl{eTL};
-                pdT = tlFlips{eTL};
+                if useFlipper
+                    % didn't get photodiode flips above, so get them now
+                    Timeline = tl{eTL};
+                    tt = Timeline.rawDAQTimestamps;
+                    evTrace = Timeline.rawDAQData(:, strcmp({Timeline.hw.inputs.name}, 'photoDiode'));
+                    pdT = schmittTimes(tt, evTrace, [3 4]);
+                else
+                    pdT = tlFlips{eTL};
+                end
                 block = blocks{e};
-                sw = block.stimWindowUpdateTimes;
+                sw = block.stimWindowUpdateTimes; 
+                % sw = sw(2:end); % sometimes need this? Why? how did sw
+                % get an extra event at the beginning? 
                 
                 success = false;
                 if length(sw)<=length(pdT) && length(sw)>1

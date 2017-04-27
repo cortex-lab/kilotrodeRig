@@ -1,5 +1,6 @@
 
 function [tags, hasEphys] = getEphysTags(mouseName, thisDate)
+% function [tags, hasEphys] = getEphysTags(mouseName, thisDate)
 
 rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
 root = fileparts(rootE);
