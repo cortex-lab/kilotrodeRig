@@ -10,10 +10,13 @@
 % to that, and timeline gets corrected to that. Others (blocks) get corrected
 % to Timeline, so that part is generic to the case when there's no ephys
 
+%%
+addpath(genpath('C:\Users\Nick\Documents\github\spikes'));
+
 %% 
 clear all
-mouseName = 'Hess';
-thisDate = '2017-04-03';
+mouseName = 'Moniz';
+thisDate = '2017-05-13';
 useFlipper = true;
 
 rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
