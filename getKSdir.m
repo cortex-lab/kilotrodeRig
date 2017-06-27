@@ -21,6 +21,12 @@ else
     if exist(fullfile(ksDir, 'spike_times.npy'), 'file')
         return;
     else
-        fprintf('could not find ksDir\n');
+        ksDir = fullfile('\\basket.cortexlab.net\data\nick\', ...
+            mouseName, thisDate);
+        if exist(fullfile(ksDir, 'spike_times.npy'), 'file')
+            return;
+        else
+            fprintf('could not find ksDir\n');
+        end
     end
 end
