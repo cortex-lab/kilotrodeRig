@@ -27,7 +27,7 @@ if isempty(ROI)
 elseif strcmp(ROI, 'ask')
     f = figure; 
     img1 = read(vr,round(nF/2));
-    imagesc(img1); colormap gray
+    imagesc(img1); colormap gray; axis image; axis off;
     title('choose roi');
     q = imrect;
     ROI = round(q.getPosition);
@@ -105,6 +105,7 @@ clear vr
 
 if makePlots
     subplot(121); imagesc(img(:,:,1,1));        title('current frame'); colormap gray
+    colormap gray; axis image; axis off;
     subplot(122); plot(avgIntensity); title('avg. intensity vs. frame');
     drawnow;  %    pause(0.01);
 end

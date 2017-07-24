@@ -86,17 +86,20 @@ expRoot = fileparts(expPath);
 
 if ~exist('tag') || isempty(tag)
     subFolder = 'ephys';
+    tag = [];
 else
     subFolder = ['ephys_' tag];
 end
     
     
-ksDir = fullfile('\\basket.cortexlab.net\data\nick\', mouseName, thisDate, subFolder);
+% ksDir = fullfile('\\basket.cortexlab.net\data\nick\', mouseName, thisDate, subFolder);
+ksDir = getKSdir(mouseName, thisDate, tag);
 rawDir = fullfile(expRoot,subFolder);
 lfpD = dir(fullfile(rawDir, '*.lf.bin'));
 lfpFilename = fullfile(rawDir, lfpD(1).name);
 
-figDir = fullfile(ksDir, 'figs');
+% figDir = fullfile(ksDir, 'figs');
+figDir = getFigDir(mouseName, thisDate, tag);
 if ~exist(figDir); mkdir(figDir); end
 
 %% see if we can get the gain factor
@@ -150,7 +153,7 @@ fprintf(1, 'plotting driftmap and saving\n'); tic
 
 fdm = figure;
 plotDriftmap(st(useSpikes), sa(useSpikes), sd(useSpikes))
-set(fdm, 'Position', [-1896         -49        1271         961]);
+p = get(fdm, 'Position'); set(fdm, 'Position', [p(1) p(2)       1271         961]);
 if length(inclSpikes)>maxPlotDriftmap
     title(sprintf('subsampled from %d to %d spikes (%.2f%%)', length(inclSpikes), maxPlotDriftmap, maxPlotDriftmap/length(inclSpikes)));
 end
@@ -257,7 +260,7 @@ freqBands = {[1.5 4], [4 10], [10 30], [30 80], [80 200]};
 
 
 flfp = plotLFPpower(F, allPowerEst, dispRange, marginalChans, freqBands);
-set(flfp, 'Position', [-1896         -18        1564         930]);
+p = get(flfp, 'Position'); set(flfp, 'Position', [p(1) p(2)       1564         930]);
 
 saveFig(flfp, fullfile(figDir, 'lfpPower'), 'jpg');
 
@@ -294,8 +297,27 @@ n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-12'; r(n).tlExpNum 
 %%
 clear r
 r.mouseName = 'Hess'; r.thisDate = '2017-04-03';
+
 %%
-for n = 1%1:length(r)
+clear r; 
+r.mouseName = 'Krebs'; r.thisDate = '2017-06-05';
+
+%%
+clear r; 
+r.mouseName = 'Waksman'; r.thisDate = '2017-06-10';
+%%
+clear r; 
+r.mouseName = 'Robbins'; r.thisDate = '2017-06-13';
+
+%%
+clear r; n= 0;
+n = n+1; r(n).mouseName = 'Hench'; r(n).thisDate = '2017-06-14';
+n = n+1; r(n).mouseName = 'Hench'; r(n).thisDate = '2017-06-15';
+n = n+1; r(n).mouseName = 'Hench'; r(n).thisDate = '2017-06-16';
+n = n+1; r(n).mouseName = 'Hench'; r(n).thisDate = '2017-06-17';
+n = n+1; r(n).mouseName = 'Hench'; r(n).thisDate = '2017-06-18';
+%%
+for n = 1:length(r)
     fn = fieldnames(r); for f = 1:length(fn); eval([fn{f} ' = r(n).(fn{f});']); end;
     try
         fprintf(1, '%s - %s\n', mouseName, thisDate);

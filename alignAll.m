@@ -10,10 +10,17 @@
 % to that, and timeline gets corrected to that. Others (blocks) get corrected
 % to Timeline, so that part is generic to the case when there's no ephys
 
+%%
+addpath(genpath('C:\Users\Nick\Documents\github\spikes'));
+addpath(genpath('C:\Users\Nick\Documents\github\kilotrodeRig'));
+addpath(genpath('C:\Users\Nick\Documents\github\Rigbox'));
+addpath(genpath('C:\Users\Nick\Documents\github\npy-matlab'));
+
+
 %% 
 clear all
-mouseName = 'Hess';
-thisDate = '2017-04-03';
+mouseName = 'Hench';
+thisDate = '2017-06-15';
 useFlipper = true;
 
 rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
@@ -151,7 +158,7 @@ for e = 1:length(expNums)
                 end
                 block = blocks{e};
                 sw = block.stimWindowUpdateTimes; 
-                % sw = sw(2:end); % sometimes need this? Why? how did sw
+%                 sw = sw(2:end); % sometimes need this? Why? how did sw
                 % get an extra event at the beginning? 
                 
                 success = false;
