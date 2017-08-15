@@ -316,6 +316,19 @@ n = n+1; r(n).mouseName = 'Hench'; r(n).thisDate = '2017-06-15';
 n = n+1; r(n).mouseName = 'Hench'; r(n).thisDate = '2017-06-16';
 n = n+1; r(n).mouseName = 'Hench'; r(n).thisDate = '2017-06-17';
 n = n+1; r(n).mouseName = 'Hench'; r(n).thisDate = '2017-06-18';
+
+%%
+clear r; n= 0;
+% n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-13';
+% n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-14';
+% n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-15';
+% n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-16';
+n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-17';
+n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-18';
+% n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-19';
+
+
+
 %%
 for n = 1:length(r)
     fn = fieldnames(r); for f = 1:length(fn); eval([fn{f} ' = r(n).(fn{f});']); end;

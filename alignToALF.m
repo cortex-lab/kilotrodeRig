@@ -22,9 +22,10 @@ alignFile = dir(fullfile(alignDir, sprintf('correct_timeline*ephys_%s.npy', mast
 b = readNPY(fullfile(alignDir, alignFile.name));
 
 tAligned = applyCorrection(tVid, b); % will be a column after this
+nFr = numel(tVid); 
 
-writeNPY(tVid(:), fullfile(eyeFolder, 'eye.timestamps_Timeline.npy'));
-writeNPY(tAligned(:), fullfile(eyeFolder, 'eye.timestamps.npy'));
+writeNPY([[0:nFr-1]' tVid(:)], fullfile(eyeFolder, 'eye.timestamps_Timeline.npy'));
+writeNPY([[0:nFr-1]' tAligned(:)], fullfile(eyeFolder, 'eye.timestamps.npy'));
 
 %% for timeline
 
@@ -54,5 +55,11 @@ for t = 1:length(tags)
     end
     
     writeNPY(st, fullfile(ksd, 'spikes.times.npy'));
-    
+
+    cluFile = fullfile(ksd, 'spike_clusters.npy');
+    if exist(cluFile, 'file')
+        copyfile(fullfile(ksd, 'spike_clusters.npy'), fullfile(ksd, 'spikes.clusters.npy'));
+    else
+        copyfile(fullfile(ksd, 'spike_templates.npy'), fullfile(ksd, 'spikes.clusters.npy'));
+    end
 end
