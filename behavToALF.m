@@ -6,36 +6,36 @@
 
 clear r;
 n = 0; 
-% n = n+1; r(n).mouseName = 'Cori'; r(n).thisDate = '2016-12-14'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
-% n = n+1; r(n).mouseName = 'Cori'; r(n).thisDate = '2016-12-15'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 5; 
-% n = n+1; r(n).mouseName = 'Cori'; r(n).thisDate = '2016-12-16'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
-% n = n+1; r(n).mouseName = 'Cori'; r(n).thisDate = '2016-12-17'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
-% n = n+1; r(n).mouseName = 'Cori'; r(n).thisDate = '2016-12-18'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
-% 
-% n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-08'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
-% n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-09'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
-% n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-10'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
-% n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-11'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
-% n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-12'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
-% n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-13'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = []; 
-% 
-% n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-07'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
-% n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-08'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
-% n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-09'; r(n).tlExpNum = 3; r(n).cwExpNum = 4; r(n).passiveExpNum = 6; 
-% n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-10'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
-% n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-11'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
-% n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-12'; r(n).tlExpNum = 3; r(n).cwExpNum = 4; r(n).passiveExpNum = 6; 
+n = n+1; r(n).mouseName = 'Cori'; r(n).thisDate = '2016-12-14'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
+n = n+1; r(n).mouseName = 'Cori'; r(n).thisDate = '2016-12-15'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Cori'; r(n).thisDate = '2016-12-16'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
+n = n+1; r(n).mouseName = 'Cori'; r(n).thisDate = '2016-12-17'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
+n = n+1; r(n).mouseName = 'Cori'; r(n).thisDate = '2016-12-18'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
+
+n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-08'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-09'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-10'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-11'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-12'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
+n = n+1; r(n).mouseName = 'Radnitz'; r(n).thisDate = '2017-01-13'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = []; 
+
+n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-07'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-08'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-09'; r(n).tlExpNum = 3; r(n).cwExpNum = 4; r(n).passiveExpNum = 6; 
+n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-10'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-11'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
+n = n+1; r(n).mouseName = 'Muller'; r(n).thisDate = '2017-01-12'; r(n).tlExpNum = 3; r(n).cwExpNum = 4; r(n).passiveExpNum = 6; 
 
 
-% n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-13'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
-% n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-14'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
-% n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-15'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
-% n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-16'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
-% n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-17'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
-% n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-18'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
-% n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-19'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
-% 
-% 
+n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-13'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-14'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-15'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-16'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-17'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-18'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
+n = n+1; r(n).mouseName = 'Moniz'; r(n).thisDate = '2017-05-19'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
+
+
 n = n+1; r(n).mouseName = 'Hench'; r(n).thisDate = '2017-06-14'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 6; 
 n = n+1; r(n).mouseName = 'Hench'; r(n).thisDate = '2017-06-15'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
 n = n+1; r(n).mouseName = 'Hench'; r(n).thisDate = '2017-06-16'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
@@ -43,9 +43,9 @@ n = n+1; r(n).mouseName = 'Hench'; r(n).thisDate = '2017-06-17'; r(n).tlExpNum =
 n = n+1; r(n).mouseName = 'Hench'; r(n).thisDate = '2017-06-18'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
 
 
-
+n=1;
 % % for n = 1:numel(r)
-% mouseName = r(n).mouseName; thisDate = r(n).thisDate; tlExpNum = r(n).tlExpNum;
+mouseName = r(n).mouseName; thisDate = r(n).thisDate; tlExpNum = r(n).tlExpNum; passiveExpNum = r(n).passiveExpNum;
 % 
 % % mouseName = 'Muller'; 
 % % thisDate = '2017-01-07'; 
@@ -63,9 +63,9 @@ n = n+1; r(n).mouseName = 'Hench'; r(n).thisDate = '2017-06-18'; r(n).tlExpNum =
 % % thisDate = '2017-06-13'; 
 % % tlExpNum = 1;
 % 
-% rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
-% root = fileparts(rootE);
-% destDir = fullfile(root, 'alf');
+rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
+root = fileparts(rootE);
+destDir = fullfile(root, 'alf');
 % mkdir(destDir);
 
 %% load the data
@@ -188,7 +188,7 @@ for n = 1:numel(r)
             
             fitFile = fullfile('\\basket.cortexlab.net\data\nick\', mouseName, thisDate, ...
                 ['ephys_' tags{tg}], 'histologyFit.mat');
-            if exist(fitFile, 'file')
+            if exist(fitFile, 'file')                
                 load(fitFile);
                 [entryRL, entryAP, vertAngle, horizAngle] = alyxInsertionFromVector(m*10, p, av, st);
                 pen.entry_point_rl = entryRL;
@@ -226,6 +226,8 @@ for n = 1:numel(r)
                 end
                 brainLoc.allen_ontology = manOntology';
                 savejson('brain_locations', brainLoc, fullfile(destDir, tags{tg}, 'brain_locations.json'));
+            else
+                fprintf(1, 'no histology fit!\n');
             end
         end
     end
@@ -233,47 +235,50 @@ end
 
 %% ephys itself
 
-tags = getEphysTags(mouseName, thisDate);
-
-sp = loadAllKsDir(mouseName, thisDate);
-
-rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
-root = fileparts(rootE);
-destDir = fullfile(root, 'alf');
-
-for tg = 1:length(tags)
-    thisDest = fullfile(destDir, tags{tg});
-    mkdir(thisDest)
+for n = 1:numel(r)
+    mouseName = r(n).mouseName; thisDate = r(n).thisDate; tlExpNum = r(n).tlExpNum;
     
-    alf.writeEventseries(thisDest, 'spikes', sp(tg).st, [], []);
-    writeNPY(sp(tg).clu, fullfile(thisDest, 'spikes.clusters.npy'));
-    writeNPY(sp(tg).spikeAmps, fullfile(thisDest, 'spikes.amps.npy'));
-    writeNPY(sp(tg).spikeDepths, fullfile(thisDest, 'spikes.depths.npy'));
+    tags = getEphysTags(mouseName, thisDate);
     
-    cids = sp(tg).cids(:); cgs = sp(tg).cgs(:);
-    allCID = unique(sp(tg).clu); 
-    allCG = 3*ones(size(allCID));
-    for c = 1:length(cids); allCG(allCID==cids(c))=cgs(c); end
-    writeNPY(allCID, fullfile(thisDest, 'clusters.ids.npy'));
-    writeNPY(allCG, fullfile(thisDest, 'clusters.groups.npy'));
-
-    st = sp(tg).st;
-    clu = sp(tg).clu;
+    sp = loadAllKsDir(mouseName, thisDate);
     
-    uClu = unique(clu);
-    tempIndPerClu = findTempForEachClu(clu, sp(tg).spikeTemplates); % which template goes with each cluster
+    rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
+    root = fileparts(rootE);
+    destDir = fullfile(root, 'alf');
     
-    tempPerClu = sp(tg).temps(tempIndPerClu(uClu+1)+1,:,:); 
-    writeNPY(tempPerClu, fullfile(thisDest, 'clusters.waveforms.npy'));
+    for tg = 1:length(tags)
+        thisDest = fullfile(destDir, tags{tg});
+        mkdir(thisDest)
+        
+        alf.writeEventseries(thisDest, 'spikes', sp(tg).st, [], []);
+        writeNPY(sp(tg).clu, fullfile(thisDest, 'spikes.clusters.npy'));
+        writeNPY(sp(tg).spikeAmps, fullfile(thisDest, 'spikes.amps.npy'));
+        writeNPY(sp(tg).spikeDepths, fullfile(thisDest, 'spikes.depths.npy'));
+        
+        cids = sp(tg).cids(:); cgs = sp(tg).cgs(:);
+        allCID = unique(sp(tg).clu);
+        allCG = 3*ones(size(allCID));
+        for c = 1:length(cids); allCG(allCID==cids(c))=cgs(c); end
+        writeNPY(allCID, fullfile(thisDest, 'clusters.ids.npy'));
+        writeNPY(allCG, fullfile(thisDest, 'clusters.groups.npy'));
+        
+        st = sp(tg).st;
+        clu = sp(tg).clu;
+        
+        uClu = unique(clu);
+        tempIndPerClu = findTempForEachClu(clu, sp(tg).spikeTemplates); % which template goes with each cluster
+        
+        tempPerClu = sp(tg).tempsUnW(tempIndPerClu(uClu+1)+1,:,:);
+        writeNPY(tempPerClu, fullfile(thisDest, 'clusters.waveforms.npy'));
+        
+        cluYpos = sp(tg).templateYpos(tempIndPerClu(uClu+1)+1,:,:);
+        writeNPY(cluYpos, fullfile(thisDest, 'clusters.depths.npy'));
+        
+        wfDur = sp(tg).tempDur(tempIndPerClu(uClu+1)+1,:,:);
+        writeNPY(cluYpos, fullfile(thisDest, 'clusters.waveformDuration.npy'));
+    end
     
-    cluYpos = sp(tg).templateYpos(tempIndPerClu(uClu+1)+1,:,:); 
-    writeNPY(cluYpos, fullfile(thisDest, 'clusters.depths.npy'));
-    
-    wfDur = sp(tg).tempDur(tempIndPerClu(uClu+1)+1,:,:); 
-    writeNPY(cluYpos, fullfile(thisDest, 'clusters.waveformDuration.npy'));
 end
-
-
 
 %% eye alignment
 
@@ -314,6 +319,58 @@ alf.writeTimeseries(destDir, 'face', tAligned, [], []);
 
 end
 
+%% passive choiceworld
+
+for n = 26:numel(r)
+    mouseName = r(n).mouseName; thisDate = r(n).thisDate; tlExpNum = r(n).tlExpNum; passiveExpNum = r(n).passiveExpNum;
+    if ~isempty(passiveExpNum)
+        fprintf(1, '%s, %s\n', mouseName, thisDate);
+        destDir = getALFdir(mouseName, thisDate);
+        load(dat.expFilePath(mouseName, thisDate, tlExpNum, 'Timeline', 'master'));
+        [cwtP, cweP] = loadPassiveCW(mouseName, thisDate, tlExpNum, passiveExpNum, Timeline);
+        
+        alf.writeInterval(destDir, 'passiveTrials', cwtP.trialStarts, cwtP.trialEnds, [], []);
+        writeNPY(cweP.condNums, fullfile(destDir, 'passiveTrials.condNum.npy'));
+        
+        cL = cweP.contrastLeft; cR = cweP.contrastRight;
+        stimTime = cwtP.stimOn;
+        hasStim = cL>0 | cR>0;
+        stimOn = stimTime(hasStim);
+        cL = cL(hasStim);
+        cR = cR(hasStim);
+        alf.writeEventseries(destDir, 'passiveStimOn', stimOn, [], []);
+        writeNPY(cL, fullfile(destDir, 'passiveStimOn.contrastLeft.npy'));
+        writeNPY(cR, fullfile(destDir, 'passiveStimOn.contrastRight.npy'));
+        
+        alf.writeEventseries(destDir, 'passiveBeep', cwtP.goCue(cweP.hasBeep), [], []);
+        alf.writeEventseries(destDir, 'passiveValveClick', cwtP.responseTime(cweP.hasClick), [], []);
+        alf.writeEventseries(destDir, 'passiveWhiteNoise', cwtP.responseTime(cweP.hasWhiteNoise), [], []);
+    end
+end
+
+%% spontaneous intervals
+
+for n = 12:numel(r)
+    mouseName = r(n).mouseName; thisDate = r(n).thisDate; tlExpNum = r(n).tlExpNum; passiveExpNum = r(n).passiveExpNum;
+    fprintf(1, '%s, %s\n', mouseName, thisDate);
+    tags = getEphysTags(mouseName, thisDate);
+    ephysDir = getALFdir(mouseName, thisDate, tags{1});
+    destDir = getALFdir(mouseName, thisDate);
+    st = readNPY(fullfile(ephysDir, 'spikes.times.npy'));
+    cwTr = readNPY(fullfile(destDir, 'cwTrials.intervals.npy'));
+    try
+        passiveTr = readNPY(fullfile(destDir, 'passiveTrials.intervals.npy'));
+    catch
+        passiveTr = [0 0];
+    end
+    sn = sort(readNPY(fullfile(destDir,'sparseNoise.times.npy')));
+    
+    starts = sort([cwTr(1,1) passiveTr(1,1) sn(1)])';
+    ends = sort([cwTr(end,2) passiveTr(end,2) sn(end)])';
+    spontInts = [st(1) starts(1); ends(1:end-1) starts(2:end); ends(end) st(end)];
+    diff(spontInts,[],2)
+    alf.writeInterval(destDir, 'spontaneous', spontInts(:,1), spontInts(:,2), [], []);
+end
 %% particular timeline signals 
 
 sourceName = 'rewardEcho'; writeName = 'airPuffs';
