@@ -13,7 +13,7 @@ clear tags
 if numel(d)==1 && strcmp(d.name, 'ephys')
     tags = {[]};
     hasEphys = true;
-elseif numel(d)>1
+elseif numel(d)>=1
     for q = 1:numel(d)
         tags{q} = d(q).name(7:end);
     end

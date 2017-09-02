@@ -19,8 +19,8 @@ addpath(genpath('C:\Users\Nick\Documents\github\npy-matlab'));
 
 %% 
 clear all
-mouseName = 'Hench';
-thisDate = '2017-06-15';
+mouseName = 'SS079';
+thisDate = '2017-09-01';
 useFlipper = true;
 
 rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
