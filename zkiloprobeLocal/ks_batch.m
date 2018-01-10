@@ -1,5 +1,4 @@
 
-cd('J:\data\');
 %script for running Kilosort
 
 %%
@@ -29,27 +28,32 @@ ops.root = fullfile(rootDrive, 'data', mouseName, thisDate);
 % basketDrive = 'Z:\';
 % zserverDrive = 'X:\';
 % lugaroDrive = 'Y:\';
-basketDrive = '\\basket.cortexlab.net\data\';
-zserverDrive = '\\zserver.cortexlab.net\data2\';
-lugaroDrive = '\\lugaro.cortexlab.net\bigdrive\staging\';
-lugaroDrive2 = '\\lugaro.cortexlab.net\bigdrive\toarchive\';
+paths = dat.paths; 
+basketDrive = paths.workingAnalysisRepository;
+zserverDrive = paths.mainRepository;
+lugaroStagingDrive = paths.tapeStagingRepository;
+lugaroArchiveDrive = paths.tapeArchiveRepository;
+% basketDrive = '\\basket.cortexlab.net\data\';
+% zserverDrive = '\\zserver.cortexlab.net\data2\';
+% lugaroDrive = '\\lugaro.cortexlab.net\bigdrive\staging\';
+% lugaroDrive2 = '\\lugaro.cortexlab.net\bigdrive\toarchive\';
 
 if ~exist('tag')
-    zserverDest = fullfile(zserverDrive, 'Subjects', mouseName, thisDate, 'ephys');
+    zserverDest = fullfile(zserverDrive, mouseName, thisDate, 'ephys');
 %     basketDest = fullfile(basketDrive, 'nick', mouseName, thisDate, 'ephys');
 
     % update 2017-05-16 - nothing goes to basket anymore, sorting results
     % to zserver instead
-    basketDest = fullfile(zserverDrive, 'Subjects', mouseName, thisDate, 'ephys', 'sorting');
-    lugaroDest = fullfile(lugaroDrive, [mouseName '_' thisDate '_ephys']);
+    basketDest = fullfile(zserverDrive, mouseName, thisDate, 'ephys', 'sorting');
+    lugaroDest = fullfile(lugaroStagingDrive, [mouseName '_' thisDate '_ephys']);
 else
-    zserverDest = fullfile(zserverDrive, 'Subjects', mouseName, thisDate, ['ephys_' tag]);
+    zserverDest = fullfile(zserverDrive, mouseName, thisDate, ['ephys_' tag]);
 %     basketDest = fullfile(basketDrive, 'nick', mouseName, thisDate, ['ephys_' tag]);
 
     % update 2017-05-16 - nothing goes to basket anymore, sorting results
     % to zserver instead
-    basketDest = fullfile(zserverDrive, 'Subjects', mouseName, thisDate, ['ephys_' tag], 'sorting');
-    lugaroDest = fullfile(lugaroDrive, [mouseName '_' thisDate '_ephys_' tag]);
+    basketDest = fullfile(zserverDrive, mouseName, thisDate, ['ephys_' tag], 'sorting');
+    lugaroDest = fullfile(lugaroStagingDrive, [mouseName '_' thisDate '_ephys_' tag]);
 end
 
 %% deal with special case where I recorded g0 and g1 
@@ -86,7 +90,6 @@ end
 
 %% first perform CAR
 
-addpath('J:\data\');
 tic
 medianTrace = applyCARtoDat(fn, ops.NchanTOT);
 toc
@@ -100,7 +103,7 @@ movefile(fullfile(ops.root, [fnBase 'ap.bin']), lugaroDest);
 toc
 fprintf(1, 'copying to lugaro''s toarchive\n');
 tic
-movefile(lugaroDest, lugaroDrive2);
+movefile(lugaroDest, lugaroArchiveDrive);
 toc
 
 %% then run KS
@@ -110,7 +113,8 @@ fclose('all');
 %% then copy to server
 tic
 
-% npy files go to basket
+% npy files go to basket (note that as defined above this is really zserver
+% now)
 mkdir(basketDest)
 fprintf(1, 'moving npy to basket\n');
 movefile(fullfile(ops.root, '*.npy'), basketDest);

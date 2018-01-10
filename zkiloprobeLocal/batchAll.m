@@ -1,24 +1,24 @@
 addpath(genpath('C:\Users\Experiment\Documents\GitHub\widefield'))
 addpath(genpath('C:\Users\Experiment\Documents\GitHub\Rigbox'))
 addpath(genpath('C:\Users\Experiment\Documents\GitHub\alyx-matlab'))
+addpath('C:\Users\Experiment\Documents\GitHub\kilotrodeRig\zkiloprobeLocal')
+addpath(genpath('C:\Users\Experiment\Documents\missing-http-1.0.0')); onLoad
 
-addpath('J:\')
-addpath('J:\data\')
-clear tag
+%% alyx login
 
+fprintf(1, 'Login to alyx first! login window may be on the other screen\n')
+ai = alyx.loginWindow;
 
 %%
 
-clear all
-cd('J:\data\');
+clearvars -except ai
 mouseName = 'SS090';
-thisDate = '2017-12-19';
+thisDate = '2018-01-10';
 tag = 'K1';
 rootDrive = 'J:/';
 ks_batch;
 
-clear all
-cd('J:\data\');
+clearvars -except ai
 mouseName = 'SS090';
 thisDate = '2017-12-19';
 tag = 'K2';
