@@ -18,10 +18,10 @@ addpath(genpath('C:\Users\Nick\Documents\github\npy-matlab'));
 
 
 %% 
-clear all
-mouseName = 'SS079';
-thisDate = '2017-09-01';
-useFlipper = true;
+% clear all
+% mouseName = 'Lederberg';
+% thisDate = '2017-12-06';
+% useFlipper = true;
 
 rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
 root = fileparts(rootE);
@@ -235,7 +235,7 @@ for e = 1:length(expNums)
                 flipsUp = flipsUp(flipsUp>mpepStart & flipsUp<mpepEnd);
                 flipsDown = flipsDown(flipsDown>mpepStart & flipsDown<mpepEnd);
                 
-                skippedFrames = (flipsUp(2:end)-flipsDown(1:end-1))<0.05; % assume stimuli are longer than 100ms
+                skippedFrames = (flipsUp(2:end)-flipsDown(1:end-1))<0.25; % assume stimuli are longer than 100ms
                 flipsUp = flipsUp(~[false; skippedFrames]);
                 flipsDown = flipsDown(~[skippedFrames; false]);
                 

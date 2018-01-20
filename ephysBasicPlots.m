@@ -164,6 +164,7 @@ for x = 0:300:3600
     ylim([x x+300]);
     saveFig(fdm, fullfile(figDir, sprintf('driftmap%d_%d', x, x+300)), 'jpg');
 end
+ylim([0 4000]);
 toc
 
 %% waveform cdfs
