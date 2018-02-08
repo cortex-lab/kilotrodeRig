@@ -158,13 +158,20 @@ for e = 1:length(expNums)
                 end
                 block = blocks{e};
                 sw = block.stimWindowUpdateTimes; 
-%                 sw = sw(2:end); % sometimes need this? Why? how did sw
-                % get an extra event at the beginning? 
                 
                 success = false;
                 if length(sw)<=length(pdT) && length(sw)>1
                     [~,b,success,actualTimes] = findCorrection(pdT, sw, false);
                 end
+                
+                if ~success % try again dropping one sw
+                    sw = sw(2:end); % sometimes need this? Why? how did sw
+                    % get an extra event at the beginning? 
+                    if length(sw)<=length(pdT) && length(sw)>1
+                        [~,b,success,actualTimes] = findCorrection(pdT, sw, false);
+                    end
+                end
+                
                 if success                    
                     writeNPY(b, fullfile(alignDir, ...
                         sprintf('correct_block_%d_to_timeline_%d.npy', ...

@@ -5,10 +5,12 @@ function wf = galvoWaveform(pars, xPos, yPos, laserAmp, pulseDur, pulseInterval,
 %
 % pars contains: 
 % - Fs (1/s), sample rate of the output 
-% - mmPerV, the number of mm that the galvo will travel for one V change
+% - mmPerVLR, the number of mm that the galvo will travel for one V change
+% - mmPerVAP, the number of mm that the galvo will travel for one V change
 % - travelTime (s), how long to wait after moving to ensure the motor has made it
 % - mWperV, how much power output you will get from laser per V command
 % signal
+% - laserZeroV, an offset voltage to add to the laser signal
 %
 % all inputs after pars can be vectors to make multiple consecutive steps.
 % All must have at least one entry, and have the same length.
@@ -23,9 +25,11 @@ function wf = galvoWaveform(pars, xPos, yPos, laserAmp, pulseDur, pulseInterval,
 
 if isempty(pars); pars.dummy = []; end
 Fs = pick(pars, 'Fs', 'def', 20e3);
-mmPerV = pick(pars, 'mmPerV', 'def', 2);
+mmPerVLR = pick(pars, 'mmPerVLR', 'def', 2);
+mmPerVAP = pick(pars, 'mmPerVAP', 'def', 2);
 travelTime = pick(pars, 'travelTime', 'def', 0.002);
 mWperV = pick(pars, 'mWperV', 'def', 1);
+laserZeroV = pick(pars, 'laserZeroV', 'def', 0);
 
 np = numel(pulseInterval);
 
@@ -41,8 +45,8 @@ for p = 1:np
     pulseEnd = pulseStart+round(pulseDur(p)*Fs);
     positionEnd = positionStart+round(pulseInterval(p)*Fs);
     
-    wf(1, positionStart:positionEnd) = xPos(p)/mmPerV;
-    wf(2, positionStart:positionEnd) = yPos(p)/mmPerV;
+    wf(1, positionStart:positionEnd) = xPos(p)/mmPerVLR;
+    wf(2, positionStart:positionEnd) = yPos(p)/mmPerVAP;
     
     ns = numel(pulseStart:pulseEnd);
     pulseSamps = zeros(1, ns);
@@ -58,5 +62,5 @@ for p = 1:np
         
     end
     
-    wf(3, pulseStart:pulseEnd) = pulseSamps;
+    wf(3, pulseStart:pulseEnd) = pulseSamps+laserZeroV;
 end

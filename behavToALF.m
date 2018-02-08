@@ -70,16 +70,20 @@ n = 0;
 rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
 root = fileparts(rootE);
 destDir = fullfile(root, 'alf');
-% mkdir(destDir);
+mkdir(destDir);
 
 %% load the data
 
 % load trial events stuff
-load(fullfile(root, 'activeData'))
+if exist(fullfile(root, 'activeData'))
+    hasCW = true;
+    load(fullfile(root, 'activeData'))
 
-% licks
-load(fullfile(root, 'lickData')); 
-
+    % licks
+    load(fullfile(root, 'lickData')); 
+else
+    hasCW = false;
+end
 %
 % also wheel, to analyze with new code. saved "wheelData" doesn't have
 % position so we're going back to the source.
@@ -91,16 +95,17 @@ d = dir(fullfile(root, 'alignments', 'correct_timeline*npy'));
 b = readNPY(fullfile(root, 'alignments', d(end).name));
 tWheel = applyCorrection(tt, b);
 
-Fs = 1000;
-[moveOnsets, moveOffsets] = wheel.findWheelMoves3(wheelRaw, tWheel, Fs, []);
-
-% if choiceworld, can do this part of the movement detection
-resp = cweA.choice; hasTurn = resp==1|resp==2; resp = resp(hasTurn);
-intStartTime = cwtA.goCue(hasTurn); respTime = cwtA.responseTime(hasTurn);
-moveType = wheel.classifyWheelMoves(tWheel, wheelRaw, moveOnsets, moveOffsets, intStartTime, respTime, resp);
-clear dm; dm.moveOnsets = moveOnsets; dm.moveOffsets = moveOffsets; dm.moveType = moveType;
+if hasCW
+    Fs = 1000;
+    [moveOnsets, moveOffsets] = wheel.findWheelMoves3(wheelRaw, tWheel, Fs, []);
+    
+    % if choiceworld, can do this part of the movement detection
+    resp = cweA.choice; hasTurn = resp==1|resp==2; resp = resp(hasTurn);
+    intStartTime = cwtA.goCue(hasTurn); respTime = cwtA.responseTime(hasTurn);
+    moveType = wheel.classifyWheelMoves(tWheel, wheelRaw, moveOnsets, moveOffsets, intStartTime, respTime, resp);
+    clear dm; dm.moveOnsets = moveOnsets; dm.moveOffsets = moveOffsets; dm.moveType = moveType;
     plotWheel(tWheel, wheelRaw, dm);
-
+end
 
 % write wheel
 
@@ -110,55 +115,57 @@ writeNPY(wheelRaw(:), fullfile(destDir, 'wheel.position.npy'));
 vel = wheel.computeVelocity2(wheelRaw, 0.015, 1/mean(diff(tWheel)));
 writeNPY(vel(:), fullfile(destDir, 'wheel.velocity.npy'));
 
-% write movement detection results
+if hasCW
+    % write movement detection results
+    
+    alf.writeInterval(destDir, 'wheelMoves', moveOnsets, moveOffsets, [], []);
+    if exist('moveType', 'var')
+        writeNPY(moveType(:), fullfile(destDir, 'wheelMoves.type.npy'));
+    end
 
-alf.writeInterval(destDir, 'wheelMoves', moveOnsets, moveOffsets, [], []);
-if exist('moveType', 'var')
-    writeNPY(moveType(:), fullfile(destDir, 'wheelMoves.type.npy'));
+
+    % write lick
+
+    alf.writeTimeseries(destDir, 'lickSignal', tLick, [], []);
+    writeNPY(lickSigC(:), fullfile(destDir, 'lickSignal.trace.npy'));
+    alf.writeEventseries(destDir, 'licks', lickTimes, [], []);
+
+    % write behavioral event times and metadata
+
+    % vars = cweA.Properties.VariableNames;
+    % for v = 1:numel(vars)
+    %     if ~strcmp(vars{v}, 'vcc')
+    %         var = cweA.(vars{v});
+    %         writeNPY(var, fullfile(destDir, ['choiceWorldTrials.' vars{v} '.npy']));
+    %     end
+    % end
+    % 
+    % vars = {'stimOn', 'beeps', 'feedbackTime', 'responseTime'};
+    % for v = 1:numel(vars)
+    %     var = cwtA.(vars{v});
+    %     if ~strcmp(vars{v}, 'beeps')        
+    %         writeNPY(var, fullfile(destDir, ['choiceWorldTimes.' vars{v} '.npy']));
+    %     else
+    %         writeNPY(var, fullfile(destDir, 'choiceWorldTimes.goCue.npy'));
+    %     end
+    % end
+
+    alf.writeEventseries(destDir, 'cwStimOn', cwtA.stimOn, [], []);
+    writeNPY(cweA.contrastLeft, fullfile(destDir, 'cwStimOn.contrastLeft.npy'));
+    writeNPY(cweA.contrastRight, fullfile(destDir, 'cwStimOn.contrastRight.npy'));
+
+    alf.writeEventseries(destDir, 'cwResponse', cwtA.responseTime, [], []);
+    writeNPY(cweA.choice, fullfile(destDir, 'cwResponse.choice.npy'));
+
+    alf.writeEventseries(destDir, 'cwGoCue', cwtA.beeps, [], []);
+
+    alf.writeEventseries(destDir, 'cwFeedback', cwtA.feedbackTime, [], []);
+    writeNPY(cweA.feedback, fullfile(destDir, 'cwFeedback.type.npy'));
+
+    alf.writeInterval(destDir, 'cwTrials', cwtA.trialStarts, cwtA.trialEnds, [], []);
+    writeNPY(cweA.repNum, fullfile(destDir, 'cwTrials.repNum.npy'));
+    writeNPY(cweA.inclTrials, fullfile(destDir, 'cwTrials.inclTrials.npy'));
 end
-
-% write lick
-
-alf.writeTimeseries(destDir, 'lickSignal', tLick, [], []);
-writeNPY(lickSigC(:), fullfile(destDir, 'lickSignal.trace.npy'));
-alf.writeEventseries(destDir, 'licks', lickTimes, [], []);
-
-% write behavioral event times and metadata
-
-% vars = cweA.Properties.VariableNames;
-% for v = 1:numel(vars)
-%     if ~strcmp(vars{v}, 'vcc')
-%         var = cweA.(vars{v});
-%         writeNPY(var, fullfile(destDir, ['choiceWorldTrials.' vars{v} '.npy']));
-%     end
-% end
-% 
-% vars = {'stimOn', 'beeps', 'feedbackTime', 'responseTime'};
-% for v = 1:numel(vars)
-%     var = cwtA.(vars{v});
-%     if ~strcmp(vars{v}, 'beeps')        
-%         writeNPY(var, fullfile(destDir, ['choiceWorldTimes.' vars{v} '.npy']));
-%     else
-%         writeNPY(var, fullfile(destDir, 'choiceWorldTimes.goCue.npy'));
-%     end
-% end
-
-alf.writeEventseries(destDir, 'cwStimOn', cwtA.stimOn, [], []);
-writeNPY(cweA.contrastLeft, fullfile(destDir, 'cwStimOn.contrastLeft.npy'));
-writeNPY(cweA.contrastRight, fullfile(destDir, 'cwStimOn.contrastRight.npy'));
-
-alf.writeEventseries(destDir, 'cwResponse', cwtA.responseTime, [], []);
-writeNPY(cweA.choice, fullfile(destDir, 'cwResponse.choice.npy'));
-
-alf.writeEventseries(destDir, 'cwGoCue', cwtA.beeps, [], []);
-
-alf.writeEventseries(destDir, 'cwFeedback', cwtA.feedbackTime, [], []);
-writeNPY(cweA.feedback, fullfile(destDir, 'cwFeedback.type.npy'));
-
-alf.writeInterval(destDir, 'cwTrials', cwtA.trialStarts, cwtA.trialEnds, [], []);
-writeNPY(cweA.repNum, fullfile(destDir, 'cwTrials.repNum.npy'));
-writeNPY(cweA.inclTrials, fullfile(destDir, 'cwTrials.inclTrials.npy'));
-
 
 %% write ephys borders
 
@@ -245,9 +252,9 @@ end
 % for n = 1:numel(r)
 %     mouseName = r(n).mouseName; thisDate = r(n).thisDate; tlExpNum = r(n).tlExpNum;
     
-%     tags = getEphysTags(mouseName, thisDate);
-%     
-%     sp = loadAllKsDir(mouseName, thisDate);
+    tags = getEphysTags(mouseName, thisDate);
+    
+    sp = loadAllKsDir(mouseName, thisDate);
     
     rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
     root = fileparts(rootE);
@@ -515,3 +522,34 @@ for q = 1:numel(mpNum)
 end
 
 %% spontaneous intervals, given other sources
+
+
+%% galvo params
+
+% include if any of the parameters have a "mWperV"
+if any(cellfun(@(x)isfield(x, 'mWperV'), pars))
+    
+    galvoExpNum = find(cellfun(@(x)isfield(x, 'mWperV'), pars), 1);
+    
+    alfDir = getALFdir(mouseName, thisDate);    
+    
+    [galvoIntervals, galvoAPLR, laserIntervals, laserPower] = extractGalvo(...
+        mouseName, thisDate, tlExpNum, galvoExpNum);
+    
+    rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
+    root = fileparts(rootE);
+    tags = getEphysTags(mouseName, thisDate); masterAlign = tags{1};
+    alignDir = fullfile(root, 'alignments');
+    alignFile = dir(fullfile(alignDir, sprintf('correct_timeline*ephys_%s.npy', masterAlign)));
+    b = readNPY(fullfile(alignDir, alignFile.name));
+    giAlign = applyCorrection(galvoIntervals, b); giAlign = reshape(giAlign, size(galvoIntervals));
+    liAlign = applyCorrection(laserIntervals, b); liAlign = reshape(liAlign, size(laserIntervals));
+    
+    alf.writeInterval(alfDir, 'galvoPositions', giAlign(:,1), giAlign(:,2), [], []);
+    writeNPY(galvoAPLR(:,1), fullfile(alfDir, 'galvoPositions.AP.npy'));
+    writeNPY(galvoAPLR(:,2), fullfile(alfDir, 'galvoPositions.LR.npy'));
+    
+    alf.writeInterval(alfDir, 'laserPulses', liAlign(:,1), liAlign(:,2), [], []);
+    writeNPY(laserPower, fullfile(alfDir, 'laserPulses.power.npy'));
+
+end
