@@ -67,15 +67,17 @@ n = 0;
 % % thisDate = '2017-06-13'; 
 % % tlExpNum = 1;
 % 
-rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
-root = fileparts(rootE);
-destDir = fullfile(root, 'alf');
+% rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
+% root = fileparts(rootE);
+% destDir = fullfile(root, 'alf');
+root = getRootDir(mouseName, thisDate);
+destDir = getALFdir(mouseName, thisDate);
 mkdir(destDir);
 
 %% load the data
 
 % load trial events stuff
-if exist(fullfile(root, 'activeData'))
+if exist(fullfile(root, 'activeData.mat'))
     hasCW = true;
     load(fullfile(root, 'activeData'))
 
@@ -122,7 +124,15 @@ if hasCW
     if exist('moveType', 'var')
         writeNPY(moveType(:), fullfile(destDir, 'wheelMoves.type.npy'));
     end
+    
+    if exist('moveAmp', 'var')
+        writeNPY(moveAmp(:), fullfile(destDir, 'wheelMoves.amp.npy'));
+    end
 
+    if exist('peakVelTimes', 'var')
+        peakVel = interp1(tWheel, vel, peakVelTimes);
+        writeNPY(peakVel(:), fullfile(destDir, 'wheelMoves.peakVel.npy'));
+    end
 
     % write lick
 
@@ -182,8 +192,10 @@ if doAnatomy
         mouseName = r(n).mouseName; thisDate = r(n).thisDate; tlExpNum = r(n).tlExpNum;
 
 
-        rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
-        root = fileparts(rootE);
+%         rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
+%         root = fileparts(rootE);
+root = getRootDir(mouseName, thisDate);
+
         destDir = fullfile(root, 'alf');
         mkdir(destDir);
         tags = getEphysTags(mouseName, thisDate);
@@ -256,8 +268,10 @@ end
     
     sp = loadAllKsDir(mouseName, thisDate);
     
-    rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
-    root = fileparts(rootE);
+%     rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
+%     root = fileparts(rootE);
+root = getRootDir(mouseName, thisDate);
+
     destDir = fullfile(root, 'alf');
     
     for tg = 1:length(tags)
@@ -296,8 +310,9 @@ end
 
 %% eye alignment
 
-rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
-root = fileparts(rootE);
+% rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
+% root = fileparts(rootE);
+root = getRootDir(mouseName, thisDate);
 destDir = fullfile(root, 'alf');
 
 eyeFolder = fileparts(dat.expFilePath(mouseName, thisDate, tlExpNum, 'eyetracking', 'master'));
@@ -370,8 +385,9 @@ end
 % fprintf(1, '%s, %s\n', mouseName, thisDate);
 
 % paths
-rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
-root = fileparts(rootE);
+% rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
+% root = fileparts(rootE);
+root = getRootDir(mouseName, thisDate);
 
 alignDir = fullfile(root, 'alignments');
 

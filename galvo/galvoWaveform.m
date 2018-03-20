@@ -38,15 +38,36 @@ if numel(pulseType)==1; pulseType = repmat(pulseType, np, 1); end
 totalDur = sum(pulseInterval)+travelTime*(np-1);
 
 wf = zeros(3, ceil(totalDur*Fs));
-
+lastPulseEnd = 1; lastPositionEnd = 0;
 for p = 1:np
-    positionStart = 1+round(sum(pulseInterval(1:p-1))*Fs);% in samples
-    pulseStart = positionStart+ceil(travelTime*Fs); 
-    pulseEnd = pulseStart+round(pulseDur(p)*Fs);
-    positionEnd = positionStart+round(pulseInterval(p)*Fs);
     
-    wf(1, positionStart:positionEnd) = xPos(p)/mmPerVLR;
-    wf(2, positionStart:positionEnd) = yPos(p)/mmPerVAP;
+    % old method: start the pulse right after the new position
+%     positionStart = 1+round(sum(pulseInterval(1:p-1))*Fs);% in samples
+%     pulseStart = positionStart+ceil(travelTime*Fs); 
+%     pulseEnd = pulseStart+round(pulseDur(p)*Fs);
+%     positionEnd = positionStart+round(pulseInterval(p)*Fs);
+
+    % new method: start the new position some time in between the old pulse
+    % and the new pulse
+    
+    pulseStart = 1+round(sum(pulseInterval(1:p-1))*Fs)+ceil(travelTime*Fs); % in samples
+    pulseEnd = pulseStart+round(pulseDur(p)*Fs);    
+    
+    % don't set the position until you know the time of the next pulse
+    if p==1
+        positionStart = 1; 
+        positionEnd = pulseEnd;
+        wf(1, positionStart:positionEnd) = xPos(p)/mmPerVLR;
+        wf(2, positionStart:positionEnd) = yPos(p)/mmPerVAP;
+    else
+        positionStart = lastPositionEnd+1;
+        positionEnd = randi(max(1,pulseStart-lastPulseEnd-ceil(travelTime*Fs)))+lastPulseEnd;
+        wf(1, positionStart:positionEnd) = xPos(p-1)/mmPerVLR;
+        wf(2, positionStart:positionEnd) = yPos(p-1)/mmPerVAP;
+    end
+            
+    lastPositionEnd = positionEnd;
+    
     
     ns = numel(pulseStart:pulseEnd);
     pulseSamps = zeros(1, ns);
@@ -63,4 +84,9 @@ for p = 1:np
     end
     
     wf(3, pulseStart:pulseEnd) = pulseSamps+laserZeroV;
+    lastPulseEnd = pulseEnd;
 end
+
+% last position
+wf(1, positionEnd+1:end-1) = xPos(p)/mmPerVLR;
+wf(2, positionEnd+1:end-1) = yPos(p)/mmPerVAP;

@@ -30,20 +30,21 @@ for q = 1:numel(rAll)
         bordersFile = fullfile(alfDir, tags{t}, ['borders_' tags{t} '.tsv']);
         if exist(bordersFile, 'file')
             borders = readtable(bordersFile ,'Delimiter','\t', 'FileType', 'text');
-        end
-        
-        if any(ismember(borders.acronym, thisAndChildren))
-            foundIdx = find(ismember(borders.acronym, thisAndChildren));
-            for f = 1:numel(foundIdx)
-                fprintf(1, 'found %s in %s/%s/%s\n', borders.acronym{foundIdx(f)}, ...
-                    mouseName, thisDate, tags{t});
-            end
             
-            if isempty(r)
-                r = rAll(q); r.tag = tags{t};
-            else
-                tmp = rAll(q); tmp.tag = tags{t};
-                r(end+1) = tmp;
+            
+            if any(ismember(borders.acronym, thisAndChildren))
+                foundIdx = find(ismember(borders.acronym, thisAndChildren));
+                for f = 1:numel(foundIdx)
+                    fprintf(1, 'found %s in %s/%s/%s\n', borders.acronym{foundIdx(f)}, ...
+                        mouseName, thisDate, tags{t});
+                end
+                
+                if isempty(r)
+                    r = rAll(q); r.tag = tags{t};
+                else
+                    tmp = rAll(q); tmp.tag = tags{t};
+                    r(end+1) = tmp;
+                end
             end
         end
     end

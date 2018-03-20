@@ -3,8 +3,9 @@
 function ksDir = getKSdir(mouseName, thisDate, ephysTag)
 
 % first look in zserver
-rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
-root = fileparts(rootE);
+% rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
+% root = fileparts(rootE);
+root = getRootDir(mouseName, thisDate);
 
 if ~isempty(ephysTag)
     ephysFolder = ['ephys_' ephysTag];
