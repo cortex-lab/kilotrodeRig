@@ -23,8 +23,9 @@ addpath(genpath('C:\Users\Nick\Documents\github\npy-matlab'));
 % thisDate = '2017-12-06';
 % useFlipper = true;
 
-rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
-root = fileparts(rootE);
+% rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
+% root = fileparts(rootE);
+root = getRootDir(mouseName, thisDate);
 
 alignDir = fullfile(root, 'alignments');
 if ~exist(alignDir, 'dir'); mkdir(alignDir); end;
@@ -43,7 +44,10 @@ if hasEphys
             [~, pdFlips, allET] = loadSync(mouseName, thisDate, tags{t});
         end
         if useFlipper
-            ephysFlips{t} = allET{5}{1};
+            if ~exist('flipperChan', 'var')
+                flipperChan = 5;
+            end
+            ephysFlips{t} = allET{flipperChan}{1};
         else
             ephysFlips{t} = pdFlips;
         end

@@ -261,6 +261,8 @@ end
 
 %% ephys itself
 
+useDriftmap = true;
+
 % for n = 1:numel(r)
 %     mouseName = r(n).mouseName; thisDate = r(n).thisDate; tlExpNum = r(n).tlExpNum;
     
@@ -268,9 +270,7 @@ end
     
     sp = loadAllKsDir(mouseName, thisDate);
     
-%     rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
-%     root = fileparts(rootE);
-root = getRootDir(mouseName, thisDate);
+    root = getRootDir(mouseName, thisDate);
 
     destDir = fullfile(root, 'alf');
     
@@ -281,7 +281,17 @@ root = getRootDir(mouseName, thisDate);
         alf.writeEventseries(thisDest, 'spikes', sp(tg).st, [], []);
         writeNPY(sp(tg).clu, fullfile(thisDest, 'spikes.clusters.npy'));
         writeNPY(sp(tg).spikeAmps, fullfile(thisDest, 'spikes.amps.npy'));
-        writeNPY(sp(tg).spikeDepths, fullfile(thisDest, 'spikes.depths.npy'));
+        
+        if useDriftmap
+            ksDir = getKSdir(mouseName, thisDate, tags{tg});
+            [~,~, sd] = ksDriftmap(ksDir);
+            writeNPY(sd, fullfile(thisDest, 'spikes.depths.npy'));
+            %fprintf(1, '%s: %d, %d\n', tags{tg}, numel(sd), numel(sp(tg).spikeDepths));
+        else
+            writeNPY(sp(tg).spikeDepths, fullfile(thisDest, 'spikes.depths.npy'));
+        end
+        
+        
         
         cids = sp(tg).cids(:); cgs = sp(tg).cgs(:);
         allCID = unique(sp(tg).clu);
