@@ -13,6 +13,7 @@ end
 
 %% configure eye-tracking acquisition service
 mpepDataHosts = io.MpepUDPDataHosts(mpepDataHosts);
+% mpepDataHosts = srv.RemoteMPEPService(mpepDataHosts);
 mpepDataHosts.open;
 mpepDataHosts.Title = 'mPEP Data Hosts';
 mpepDataHosts.Id = 'mpep-data-hosts';
