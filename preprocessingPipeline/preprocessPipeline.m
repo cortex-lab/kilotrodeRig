@@ -7,10 +7,11 @@ addpath('F:\Dropbox\ucl\code\rfMapping');
 %%
 
 clear all; close all;
-mouseName = 'Bekesy';
-thisDate = '2018-03-27'; 
-useFlipper = true; flipperChan = 1;
+mouseName = 'SS088';
+thisDate = '2018-05-10'; 
+useFlipper = true; flipperChan = 5;
 
+%%
 alignAll;
 
 %%

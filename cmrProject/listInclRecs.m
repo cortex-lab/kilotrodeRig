@@ -56,8 +56,8 @@ n = n+1; r(n).mouseName = 'Lederberg'; r(n).thisDate = '2017-12-06'; r(n).tlExpN
 n = n+1; r(n).mouseName = 'Lederberg'; r(n).thisDate = '2017-12-07'; r(n).tlExpNum = 2; r(n).cwExpNum = 3; r(n).passiveExpNum = 5; 
 n = n+1; r(n).mouseName = 'Lederberg'; r(n).thisDate = '2017-12-08'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
 n = n+1; r(n).mouseName = 'Lederberg'; r(n).thisDate = '2017-12-09'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
-% n = n+1; r(n).mouseName = 'Lederberg'; r(n).thisDate = '2017-12-10'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
-% n = n+1; r(n).mouseName = 'Lederberg'; r(n).thisDate = '2017-12-11'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
+n = n+1; r(n).mouseName = 'Lederberg'; r(n).thisDate = '2017-12-10'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
+n = n+1; r(n).mouseName = 'Lederberg'; r(n).thisDate = '2017-12-11'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
 
 n = n+1; r(n).mouseName = 'Tatum'; r(n).thisDate = '2017-12-06'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
 n = n+1; r(n).mouseName = 'Tatum'; r(n).thisDate = '2017-12-07'; r(n).tlExpNum = 1; r(n).cwExpNum = 2; r(n).passiveExpNum = 4; 
