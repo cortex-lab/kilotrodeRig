@@ -8,7 +8,7 @@ addpath('F:\Dropbox\ucl\code\rfMapping');
 
 clear all; close all;
 mouseName = 'SS088';
-thisDate = '2018-05-10'; 
+thisDate = '2018-05-11'; 
 useFlipper = true; flipperChan = 5;
 
 %%
