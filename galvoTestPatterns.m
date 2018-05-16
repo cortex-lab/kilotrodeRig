@@ -9,12 +9,12 @@ s = daq.createSession(adaptorVendor);
 mirrorXChannel = s.addAnalogOutputChannel(galvoDeviceID, xChID, 'Voltage');
 mirrorYChannel = s.addAnalogOutputChannel(galvoDeviceID, yChID, 'Voltage');
 sampleRate = s.Rate; % maybe try lower?
-
+s.queueOutputData([0 0]); s.startForeground;
 
 %% test square
 
 gridSize = 2; % units?
-holdTime = 0.0001; % sec, at each corner
+holdTime = 0.002; % sec, at each corner
 
 nSamp = holdTime*sampleRate;
 
@@ -33,7 +33,7 @@ end
 mmPerVolt = 3.6;
 gridSize = 1; % mm
 parkPosition = [-10 -10];
-holdTime = 0.0001; % sec, at each corner
+holdTime = 0.002; % sec, at each corner
 
 nSamp = holdTime*sampleRate;
 
