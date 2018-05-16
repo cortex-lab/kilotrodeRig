@@ -13,6 +13,6 @@ if ~isempty(varargin)
 end
 
 if ~exist(alfDir, 'dir')
-    error('no alf dir at %s', alfDir)
+    warning('no alf dir at %s', alfDir)
 end
 
