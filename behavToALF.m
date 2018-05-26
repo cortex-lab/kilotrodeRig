@@ -265,14 +265,14 @@ useDriftmap = true;
 
 % for n = 1:numel(r)
 %     mouseName = r(n).mouseName; thisDate = r(n).thisDate; tlExpNum = r(n).tlExpNum;
-    
+        
+
     tags = getEphysTags(mouseName, thisDate);
-    
-    sp = loadAllKsDir(mouseName, thisDate);
-    
     root = getRootDir(mouseName, thisDate);
 
     destDir = fullfile(root, 'alf');
+            
+    sp = loadAllKsDir(mouseName, thisDate);        
     
     for tg = 1:length(tags)
         thisDest = fullfile(destDir, tags{tg});
@@ -313,7 +313,7 @@ useDriftmap = true;
         writeNPY(cluYpos, fullfile(thisDest, 'clusters.depths.npy'));
         
         wfDur = sp(tg).tempDur(tempIndPerClu(uClu+1)+1,:,:);
-        writeNPY(cluYpos, fullfile(thisDest, 'clusters.waveformDuration.npy'));
+        writeNPY(wfDur, fullfile(thisDest, 'clusters.waveformDuration.npy'));
     end
     
 % end
