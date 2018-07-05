@@ -7,9 +7,9 @@ addpath('F:\Dropbox\ucl\code\rfMapping');
 %%
 
 clear all; close all;
-mouseName = 'SS088';
-thisDate = '2018-05-11'; 
-useFlipper = true; flipperChan = 5;
+mouseName = 'SS095';
+thisDate = '2018-07-02'; 
+useFlipper = true; flipperChan = 1;
 
 %%
 alignAll;
@@ -31,6 +31,9 @@ tlExpNum = find(hasTimeline, 1, 'last');
 %%
 nTr = cellfun(@(x)numel(getOr(x, 'trial', [])), blocks);
 cwExpNum = find(hasBlock&nTr>10, 1);
+
+% how to pick it for signals? 
+cwExpNum = 8; 
 
 computeAndSaveBehavioralVars(mouseName, thisDate, cwExpNum, tlExpNum)
 

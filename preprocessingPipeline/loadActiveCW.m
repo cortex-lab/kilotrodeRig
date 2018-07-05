@@ -48,13 +48,23 @@ warning('OUGHT TO USE PHOTODIODE TO GET STIM ONSET TIMES HERE: loadActiveCW\n');
 
 %% check that timeline-measured stuff matches
 
-allRewards = applyCorrection(applyCorrection(block.rewardDeliveryTimes, bBlockToTL), bTLtoEphys);
+if isfield(block,'rewardDeliveryTimes')
+    rt = block.rewardDeliveryTimes;
+else
+    rt = block.outputs.rewardTimes; % signals
+end
+
+allRewards = applyCorrection(applyCorrection(rt, bBlockToTL), bTLtoEphys);
 trialRewards = cwtA.responseTime(cweA.feedback==1);
 trialNegFeedback = cwtA.responseTime(cweA.feedback==-1);
 theseBeeps = beeps(beeps>cwtA.trialStarts(1) & beeps<cwtA.trialEnds(end));
 theseWhiteNoise = whiteNoise(whiteNoise>cwtA.trialStarts(1) & whiteNoise<cwtA.trialEnds(end));
 theseValveClicks = valveClicks(valveClicks>cwtA.trialStarts(1) & valveClicks<cwtA.trialEnds(end));
-theseRewards = theseValveClicks(abs(findMinDiffs(theseValveClicks, cwtA.responseTime(cweA.feedback==1)))<0.05);
+
+% note: changed min separation to 0.25 sec here, not sure why it is so much
+% bigger for signals, but anyway there you have it. Will it break this for
+% CW? Used to be 0.05.
+theseRewards = theseValveClicks(abs(findMinDiffs(theseValveClicks, cwtA.responseTime(cweA.feedback==1)))<0.25);
 goCue = cwtA.goCue;
 
 whos theseValveClicks allRewards

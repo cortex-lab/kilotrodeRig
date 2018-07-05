@@ -19,10 +19,9 @@ for q = 1:numel(rAll)
     
     mouseName = rAll(q).mouseName; thisDate = rAll(q).thisDate;
     
-    rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
-    root = fileparts(rootE);
-    alfDir = fullfile(root, 'alf');
-    
+
+    alfDir = getALFdir(mouseName, thisDate);
+
     tags = getEphysTags(mouseName, thisDate);
     
     for t = 1:numel(tags)

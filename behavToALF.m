@@ -177,8 +177,41 @@ if hasCW
     writeNPY(cweA.inclTrials, fullfile(destDir, 'cwTrials.inclTrials.npy'));
 end
 
-%% write ephys borders
+%% parameters
+% r = listInclRecs('all');
 
+% for n = 11:numel(r)
+%     clear cwExpNum
+%     mouseName = r(n).mouseName; thisDate = r(n).thisDate;
+    
+    if ~exist('cwExpNum')
+        [expNums, blocks, hasBlock, pars, isMpep, tl, hasTimeline] = ...
+            dat.whichExpNums(mouseName, thisDate);
+        nTr = cellfun(@(x)numel(getOr(x, 'trial', [])), blocks);
+        cwExpNum = find(hasBlock&nTr>10, 1);
+        parameters = pars{cwExpNum};
+    else
+        % load parameters
+        load(dat.expFilePath(mouseName, thisDate, cwExpNum, 'parameters', 'master'));
+    end
+
+    % prep
+    parameters.experimentFun = func2str(parameters.experimentFun);
+
+    % to json
+    q = jsonencode(parameters);
+
+    destFile = fullfile(getALFdir(mouseName, thisDate, []), 'parameters.json');
+    fprintf(1, 'writing %s\n', destFile);
+    fprintf(1, '  cwExpNum %d target %d %d\n', cwExpNum, parameters.targetThreshold, parameters.targetAltitude);
+    fid = fopen(destFile, 'w');
+    fwrite(fid, q, 'char');
+    fclose(fid);
+
+% end
+
+%% write ephys borders
+clear brainLoc
 if doAnatomy
     
     if ~exist('av', 'var')
@@ -188,13 +221,13 @@ if doAnatomy
         st = loadStructureTree('J:/allen/structure_tree_safe.csv');
     end
 
-    for n = 1:numel(r)
+    for n = 32%1:numel(r)
         mouseName = r(n).mouseName; thisDate = r(n).thisDate; tlExpNum = r(n).tlExpNum;
 
 
 %         rootE = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
 %         root = fileparts(rootE);
-root = getRootDir(mouseName, thisDate);
+        root = getRootDir(mouseName, thisDate);
 
         destDir = fullfile(root, 'alf');
         mkdir(destDir);
@@ -214,6 +247,7 @@ root = getRootDir(mouseName, thisDate);
                 fitFile = fullfile('\\basket.cortexlab.net\data\nick\', mouseName, thisDate, ...
                     ['ephys_' tags{tg}], 'histologyFit.mat');
                 if exist(fitFile, 'file')                
+                    clear d;
                     load(fitFile);
                     [entryRL, entryAP, vertAngle, horizAngle] = alyxInsertionFromVector(m*10, p, av, st);
                     pen.entry_point_rl = entryRL;
@@ -221,8 +255,12 @@ root = getRootDir(mouseName, thisDate);
                     pen.vertical_angle = vertAngle;
                     pen.horizontal_angle = horizAngle;
                     pen.axial_angle = 0; % don't have these for now
-                    pen.distance_advanced = borders.upperBorder(1)+200; % 200 is for the tip
-
+                    if exist('d')
+                        pen.distance_advanced = d*1000;
+                    else
+                        pen.distance_advanced = borders.upperBorder(1)+200; % 200 is for the tip
+                    end
+                    
                     savejson('probe_insertion', pen, fullfile(destDir, tags{tg}, 'probe_insertion.json'));
 
                     % now, each recording site needs a site num, ccf coords, and
@@ -230,7 +268,7 @@ root = getRootDir(mouseName, thisDate);
                     sp = readNPY('p3a_site_positions.npy');
                     cm = readNPY('p3a_channel_map.npy');
                     relCoords = sp(~isnan(cm),:);
-                    [ccfCoords, ccfOntology] = alyxLocationFromInsertion(entryRL, entryAP, vertAngle, horizAngle, axialAngle, pen.distance_advanced, relCoords, av, st);
+                    [ccfCoords, ccfOntology] = alyxLocationFromInsertion(entryRL, entryAP, vertAngle, horizAngle, 0, pen.distance_advanced, relCoords, av, st);
 
                     % use the ccfCoords as returned by this function, but not the
                     % ontology, since we have manual labels.

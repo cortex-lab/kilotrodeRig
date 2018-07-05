@@ -81,8 +81,9 @@ maxPlotDriftmap = 500000;
 % thisDate = '2017-01-15';
 % tag = [];
 
-expPath = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
-expRoot = fileparts(expPath);
+% expPath = dat.expPath(mouseName, thisDate, 1, 'main', 'master');
+% expRoot = fileparts(expPath);
+expRoot = getRootDir(mouseName, thisDate);
 
 if ~exist('tag') || isempty(tag)
     subFolder = 'ephys';
@@ -141,7 +142,7 @@ st = sp.st;
 
 %% plotting driftmap
 
-inclSpikes = find(sa>50);
+inclSpikes = find(sa>75);
 
 
 nUse = min(length(inclSpikes), maxPlotDriftmap); 
@@ -223,14 +224,14 @@ gainFactor = sp.gain;
 
 xc = sp.xcoords; yc = sp.ycoords;
 
-frms = figure;
+frms = figure; p = get(frms,'Position');
 plotAsPhase3(rmsPerChannelV, xc, yc);
 axis on; box off; set(gca, 'XTick', []);
 colormap hot
 caxis([7 30]);
 h = colorbar;
 h.Label.String = 'RMS voltage (µV)';
-set(frms, 'Position', [-1896         -24         237         936]);
+set(frms, 'Position', [p(1) p(2)         237         936]);
 saveFig(frms, fullfile(figDir, 'rmsVoltage'), 'jpg');
 
 toc
@@ -243,9 +244,7 @@ meta = readSpikeGLXmeta(fn);
 lfpFs = meta.sRateHz; 
 nChansInFile = meta.nSavedChans; 
 
-freqBand = [];
-
-[lfpByChannel, allPowerEst, F, allPowerVar] = lfpBandPower(lfpFilename, lfpFs, nChansInFile, freqBand);
+[~, allPowerEst, F] = lfpBandPower(lfpFilename, lfpFs, nChansInFile, []);
 
 chanMap = readNPY(fullfile(ksDir, 'channel_map.npy'));
 nC = length(chanMap);
@@ -265,10 +264,11 @@ p = get(flfp, 'Position'); set(flfp, 'Position', [p(1) p(2)       1564         9
 
 saveFig(flfp, fullfile(figDir, 'lfpPower'), 'jpg');
 
+
+
+
+%%
 toc
-
-
-
 return;
 
 %%
