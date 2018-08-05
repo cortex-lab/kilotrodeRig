@@ -80,7 +80,11 @@ minMoveCount = 12;
 for n = 1:numel(r)
     mouseName = r(n).mouseName; thisDate = r(n).thisDate;
     
+    tags = getEphysTags(mouseName, thisDate);
+    r(n).tags = tags;
+    
     root = getALFdir(mouseName, thisDate);
+    
     
     if exist(fullfile(root, 'include.recording.npy'))
         r(n).include = readNPY(fullfile(root, 'include.recording.npy'));
